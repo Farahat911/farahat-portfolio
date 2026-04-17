@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} | Mohammed Farahat</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='monospace' font-weight='bold' fill='%2300FF66'>M</text></svg>">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <style>
+        .project-card {
+            background: rgba(30, 30, 30, 0.98);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 15px;
+            flex: 1;
+            min-width: 280px;
+            border: 1px solid rgba(0, 255, 102, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-card:hover {
+            border-color: #00FF66;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0, 255, 102, 0.25); /* Glow أعلى */
+        }
+
+        .project-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .project-card h3 { color: #fff; font-size: 22px; margin-bottom: 10px; }
+        .project-card p { color: #ccc; font-size: 15px; line-height: 1.6; margin-bottom: 15px; }
+        
+        .tag-badge {
+            background: rgba(0,255,102,0.1);
+            color: #00FF66;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'Fira Code', monospace;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .quick-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.3s;
+            margin-top: auto;
+            width: fit-content;
+        }
+
+        .quick-link-btn:hover {
+            background: #00FF66;
+            color: #000;
+            border-color: #00FF66;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="/"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="/projects/software"><i class="fa-solid fa-code"></i> Software & AI</a>
+        <a href="/projects/automation"><i class="fa-solid fa-robot"></i> Automation</a>
+        <a href="/projects/arduino"><i class="fa-solid fa-microchip"></i> Arduino</a>
+    </div>
+
+    <div id="navbar" style="background: rgba(15,15,15,0.98); border-bottom: 1px solid rgba(0,255,102,0.1);">
+        <h2 style="color: #fff; margin-left: 50px; font-weight: bold; font-size: 30px;"><span class="primary-text">M</span>ohammed.</h2>
+        <span class="openbtn" onclick="openNav()">&#9776;</span>
+    </div>
+
+    <main>
+        <section id="projects" class="portfolio-section" style="min-height: 80vh;">
+            <div class="container">
+                <div class="title reveal" style="margin-bottom: 40px;">
+                    <h2>{{ page_title }}</h2>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                    {% if projects %}
+                        {% for project in projects %}
+                        <div class="project-card reveal" onclick="window.location.href='/project/{{ project.id }}'">
+                            <div>
+                                {% if project.image %}
+                                <img src="{{ url_for('static', filename='uploads/' + project.image) }}" alt="Project Image">
+                                {% endif %}
+                                <h3>{{ project.title }}</h3>
+                                {% if project.tags %}
+                                <span class="tag-badge">{{ project.tags }}</span>
+                                {% endif %}
+                                <p>{{ project.description }}</p>
+                            </div>
+                            
+                            {% if project.link %}
+                            <a href="{{ project.link }}" target="_blank" class="quick-link-btn" onclick="event.stopPropagation();">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Preview
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div style="width: 100%; text-align: center;" class="reveal">
+                            <p style="color: #888; font-size: 18px; font-family: 'Fira Code', monospace;">> No projects deployed yet_</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer" style="padding: 30px 0;">
+        <p>{{ settings.footer_text|safe }}</p>
+        <div style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 8px;">
+            <span style="width: 30px; height: 1px; background: rgba(0,255,102,0.3);"></span>
+            <span style="color: #00FF66; font-family: 'Fira Code', monospace; font-size: 13px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);">
+                <i class="fa-solid fa-code-branch"></i> v1.1
+            </span>
+            <span style="width: 30px; height: 1px; background: rgba(0,255,102,0.3);"></span>
+        </div>
+    </footer>
+
+    <script>
+        function openNav() { document.getElementById("mySidebar").style.width = "350px"; }
+        function closeNav() { document.getElementById("mySidebar").style.width = "0"; }
+
+        // كود الـ Scroll Reveal لصفحة المشاريع
+        function revealElements() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", revealElements);
+        revealElements(); 
+    </script>
+</body>
+</html>
